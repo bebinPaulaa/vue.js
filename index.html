@@ -54,17 +54,23 @@
                 <tr>
                     <th>Nama</th>
                     <th>Judul</th>
+                    <th>Aks1</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="data in dataMahasiswa">
                     <td>{{ data.nama }}</td>
                     <td>{{ data.judul }}</td>
+                    <td>
+                      <button class="btn btn-danger" 
+                      v-on:click="deletePeternakan(data._id)">Hapus</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
@@ -72,45 +78,58 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script>
-        let vm = new Vue({
-            el: "#app",
-            data: {
-                title: "Data API Mahasiswa",
-                description: "Data API dideploy di vercel.app",
-                dataMahasiswa: null,
+      let vm = new Vue({
+          el: "#app",
+          data: {
+              title: "Data API Mahasiswa",
+              description: "Data API dideploy di vercel.app",
+              dataMahasiswa: null,
 
-                nama: null,
-                judul: null,
-                konten: null,
-            },
-            methods: {
-                savePeternakan: function (){
-                    console.log("Button simpan ditekan");
-                    let _data = {
-                        'nama' : this.nama,
-                        'judul' : this.judul,
-                        'konten' : this.konten
-                    }
+              nama: null,
+              judul: null,
+              konten:null
+          },
+          methods: {
+              savePeternakan: function () {
+                  console.log("Button simpan ditekan");
+                  let_data = {
+                      'nama' : this.nama,
+                      'judul' : this.judul,
+                      'konten' : this.konten
+                  }
 
-                    axios
-                    .post('https://if3b-zarazzar.vercel.app/ternak', _data)
-                    .then(response => {
-                        console.log(response);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-                }
-            },
-            mounted () {
+                  axios
+                  .post('https://if3b-zarazzar.vercel.app/ternak',let_data)
+                  .then(response => {
+                      console.log(console);
+                      $('#exampleModal').modal('hide');
+                  })
+                  .catch(error => {
+                      console.log(error);
+                  })
+              },
+              deletePeternakan(id){
+                console.log("Button Hapus ditekan")
+                axios
+                .delete('https://if3b-zarazzar.vercel.app/ternak/' + id)
+                .then(response => {
+                  console.log(response)
+                  this.getPeternakan()
+                })
+              },
+              getPeternakan() {
                 axios
                 .get('https://if3b-zarazzar.vercel.app/ternak')
                 .then(response => {
-                    console.log(response);
-                    this.dataMahasiswa = response.data
+                  console.log(response);
+                  this.dataMahasiswa = response.data
                 })
-            }
-        })
-    </script>
+              }
+            },
+             mounted () {
+              this.getPeternakan ()
+             }
+      })
+  </script>
 </body>
 </html>
